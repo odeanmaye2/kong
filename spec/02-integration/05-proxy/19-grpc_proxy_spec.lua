@@ -93,8 +93,9 @@ for _, strategy in helpers.each_strategy() do
           }
         }))
         local body = assert.res_status(426, res)
-        local json = cjson.decode(body)
-        assert.same("Please use HTTP2 protocol", json.message)
+        assert.equal("", body)
+        assert.equal("Please use HTTP2 protocol", res.headers["grpc-message"])
+        assert.equal("3", res.headers["grpc-status"])
         assert.contains("Upgrade", res.headers.connection)
         assert.same("HTTP/2", res.headers["upgrade"])
       end)
@@ -107,8 +108,9 @@ for _, strategy in helpers.each_strategy() do
           }
         }))
         local body = assert.res_status(426, res)
-        local json = cjson.decode(body)
-        assert.same("Please use HTTP2 protocol", json.message)
+        assert.equal("", body)
+        assert.equal("Please use HTTP2 protocol", res.headers["grpc-message"])
+        assert.equal("3", res.headers["grpc-status"])
       end)
 
       it("non-grpc request on grpc route (no content-type)", function()
